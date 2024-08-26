@@ -1,7 +1,7 @@
 # Проект «Большое путешествие»
 
 * Студент: [Sergei Pozdeev](https://up.htmlacademy.ru/ecmascript/24/user/2416243).
-* Наставник: `Неизвестно`.
+* Наставник: [Артем Именин](https://htmlacademy.ru/profile/aimenin).
 
 ---
 
