@@ -1,6 +1,6 @@
-import { createElement } from '../render.js';
-import {getCapitalized} from '../utils';
-import {FILTER_TYPES} from '../constants';
+import AbstractView from '../framework/view/abstract-view.js';
+import { getCapitalized } from '../utils.js';
+import { FILTER_TYPES } from '../constants.js';
 
 const createTripFilterTypeTemplate = (filter) => `
     <div class="trip-filters__filter">
@@ -20,20 +20,8 @@ const createFiltersTemplate = () => `
       </div>
     </div>`;
 
-export default class FiltersView {
-  getTemplate() {
+export default class FiltersView extends AbstractView {
+  get template() {
     return createFiltersTemplate();
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
   }
 }
