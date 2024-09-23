@@ -6,10 +6,12 @@ import EventEditorView from '../view/event-editor-view.js';
 import FiltersView from '../view/filters-view.js';
 import SortView from '../view/sort-view.js';
 import EventAddButtonView from '../view/event-add-button-view.js';
+import { EVENTS_MESSAGE } from '../constants';
+import EventsMessageView from '../view/events-message-view.js';
+import {generateFilter} from '../mocks/filters';
 
 export default class Presenter {
   #tripInfoComponent = new TripInfoView();
-  #filtersComponent = new FiltersView();
   #addButtonComponent = new EventAddButtonView();
   #sortComponent = new SortView();
   #listComponent = new EventsListView();
@@ -26,12 +28,17 @@ export default class Presenter {
     const points = this.#pointModel.points;
     const destinations = this.#pointModel.destinations;
     const offers = this.#pointModel.offers;
+    const filters = generateFilter(points);
 
     render(this.#tripInfoComponent, this.infoContainer, RenderPosition.AFTERBEGIN);
-    render(this.#filtersComponent, this.filtersContainer);
+    render(new FiltersView({filters}), this.filtersContainer);
     render(this.#addButtonComponent, this.infoContainer);
     render(this.#sortComponent, this.contentContainer);
     render(this.#listComponent, this.contentContainer);
+
+    if (points.length === 0) {
+      render(new EventsMessageView(EVENTS_MESSAGE.EMPTY), this.infoContainer);
+    }
 
     points.forEach((point) => this.#renderPoint(point, destinations, offers));
   }

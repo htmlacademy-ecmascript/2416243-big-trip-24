@@ -1,12 +1,12 @@
-import { getRandomInteger } from '../utils.js';
+import { getRandomInteger } from '../util/utils.js';
 import { PRICE } from '../constants';
 
 export const points = [
   {
     id: 1,
     basePrice: `${getRandomInteger(PRICE.MIN, PRICE.MAX)}`,
-    dateFrom: '2023-05-09T22:55:56.845Z',
-    dateTo: '2023-05-15T11:22:13.375Z',
+    dateFrom: '2024-09-09T22:55:56.845Z',
+    dateTo: '2024-09-29T11:22:13.375Z',
     destination: 'cfe416cq-10xa-ye10-8077-2fs9a01e73ab',
     isFavorite: false,
     offers: [
@@ -30,8 +30,8 @@ export const points = [
   {
     id: 3,
     basePrice: `${getRandomInteger(PRICE.MIN, PRICE.MAX)}`,
-    dateFrom: '2023-08-22T04:10:01.845Z',
-    dateTo: '2023-08-22T07:22:13.845Z',
+    dateFrom: '2025-08-22T04:10:01.845Z',
+    dateTo: '2025-08-22T07:22:13.845Z',
     destination: 'f4b62099-29rf-4cud-ate2-u457c4a2998r',
     isFavorite: true,
     offers: [],

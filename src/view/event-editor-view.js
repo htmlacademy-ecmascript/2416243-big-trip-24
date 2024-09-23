@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { convertDate, getCapitalized } from '../utils.js';
+import { convertDate, getCapitalized } from '../util/utils.js';
 import { DATE_TIME_FORMAT, EVENT_TYPES } from '../constants.js';
 
 const createEventTypeItemTemplate = (type) => `

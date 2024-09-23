@@ -36,24 +36,12 @@ export const EVENT_TYPES = [
 
 export const DEFAULT_EVENT_TYPE = 'train';
 
-export const FILTER_TYPES = [
-  {
-    type: 'everything',
-    checked: true,
-  },
-  {
-    type: 'future',
-    checked: false,
-  },
-  {
-    type: 'present',
-    checked: false,
-  },
-  {
-    type: 'past',
-    checked: false,
-  },
-];
+export const FilterType = {
+  EVERYTHING: 'everything',
+  PAST: 'past',
+  PRESENT: 'present',
+  FUTURE: 'future'
+};
 
 export const TRIP_SORT_ITEMS = [
   {
@@ -90,4 +78,16 @@ export const DATE_TIME_FORMAT = {
   D_H_M_DURATION: 'DD[D] HH[H] mm[M]',
   H_M_DURATION: 'HH[H] mm[M]',
   M_DURATION: 'mm[M]'
+};
+
+export const EVENTS_MESSAGE = {
+  EMPTY: 'Click New Event to create your first point',
+  LOADING: 'Loading...'
+};
+
+export const FilterMessage = {
+  [FilterType.EVERYTHING]: 'Click New Event to create your first point',
+  [FilterType.FUTURE]: 'There are no future events now',
+  [FilterType.PRESENT]: 'There are no present events now',
+  [FilterType.PAST]: 'There are no past events now'
 };

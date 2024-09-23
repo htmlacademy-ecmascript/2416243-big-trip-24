@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
-import { DATE_TIME_FORMAT, DEFAULT_EVENT_TYPE } from './constants.js';
+import { DATE_TIME_FORMAT } from '../constants.js';
 
 export const getRandomInteger = (min = 1, max = 100) => Math.round(Math.random() * Math.abs(max - min)) + min;
 
@@ -24,14 +24,12 @@ export const convertDuration = (value) => {
   return value.format(DATE_TIME_FORMAT.M_DURATION);
 };
 
+export const isDateFuture = (start) => dayjs().isBefore(start);
+
+export const isDatePresent = (start, end) => dayjs().isAfter(start) && dayjs().isBefore(end);
+
+export const isDatePast = (end) => dayjs().isAfter(end);
+
 export const getCapitalized = (word) => `${word[0].toUpperCase()}${word.slice(1)}`;
 
-export const getDefaultPoint = () => ({
-  basePrice: 0,
-  dateFrom: new Date().toISOString(),
-  dateTo: new Date().toISOString(),
-  destination: 0,
-  isFavorite: false,
-  offers: [],
-  type: DEFAULT_EVENT_TYPE
-});
+
