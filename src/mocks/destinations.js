@@ -1,4 +1,4 @@
-import { getRandomInteger, getRandomArrayElement } from '../utils.js';
+import { getRandomInteger, getRandomArrayElement } from '../util/utils.js';
 import { CITIES, CITY_DESCRIPTIONS } from '../constants.js';
 
 export const destinations = [

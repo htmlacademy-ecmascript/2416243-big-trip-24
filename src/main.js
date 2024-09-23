@@ -4,7 +4,9 @@ import PointModel from './model/point-model.js';
 const tripMainElement = document.querySelector('.trip-main');
 const tripEventsElement = document.querySelector('.trip-events');
 const filtersElement = document.querySelector('.trip-controls__filters');
+
 const pointModel = new PointModel();
+pointModel.init();
 
 const presenter = new Presenter({
   infoContainer: tripMainElement,
@@ -13,5 +15,4 @@ const presenter = new Presenter({
   pointModel: pointModel
 });
 
-pointModel.init();
 presenter.init();

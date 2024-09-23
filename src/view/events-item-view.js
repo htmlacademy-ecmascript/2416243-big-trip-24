@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { calculateDuration, convertDate, convertDuration, getCapitalized } from '../utils.js';
+import { calculateDuration, convertDate, convertDuration, getCapitalized } from '../util/utils.js';
 import { DATE_TIME_FORMAT } from '../constants.js';
 
 const createEventSelectedOffersTemplate = (selectedOffers) => {
