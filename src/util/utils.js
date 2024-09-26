@@ -33,3 +33,14 @@ export const isDatePast = (end) => dayjs().isAfter(end);
 export const getCapitalized = (word) => `${word[0].toUpperCase()}${word.slice(1)}`;
 
 export const updateItem = (items, update) => items.map((item) => item.id === update.id ? update : item);
+
+export const sortByDate = (start) => (a, b) => dayjs(a[start]).diff(dayjs(b[start]));
+
+export const sortByDuration = (start, end) => (a, b) => {
+  const firstDuration = calculateDuration(a[start], a[end]);
+  const secondDuration = calculateDuration(b[start], b[end]);
+
+  return secondDuration.asMilliseconds() - firstDuration.asMilliseconds();
+};
+
+export const sortByValue = (value) => (a, b) => b[value] - a[value];
