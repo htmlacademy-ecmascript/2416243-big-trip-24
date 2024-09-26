@@ -165,8 +165,5 @@ export default class EventEditorView extends AbstractView {
     this.#handleFormSubmit(this.#point);
   };
 
-  #editClickHandler = (event) => {
-    event.preventDefault();
-    this.#handleEditClick();
-  };
+  #editClickHandler = () => this.#handleEditClick();
 }

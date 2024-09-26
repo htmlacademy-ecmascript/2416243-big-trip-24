@@ -6,21 +6,24 @@ import EventAddButtonView from '../view/event-add-button-view.js';
 import EventsMessageView from '../view/events-message-view.js';
 import PointPresenter from './point-presenter.js';
 import { render, RenderPosition } from '../framework/render.js';
-import { EVENTS_MESSAGE } from '../constants.js';
+import {EVENTS_MESSAGE, SortType} from '../constants.js';
 import { generateFilter } from '../mocks/filters.js';
-import { updateItem } from '../util/utils.js';
+import { sortByDate, sortByDuration, sortByValue, updateItem } from '../util/utils.js';
 
 export default class MainPresenter {
   #tripInfoComponent = new TripInfoView();
   #addButtonComponent = new EventAddButtonView();
-  #sortComponent = new SortView();
   #listComponent = new EventsListView();
+  #sortComponent = null;
   #pointModel = null;
   #pointPresenters = new Map();
 
   #points = [];
   #offers = [];
   #destinations = [];
+
+  #defaultSortType = SortType.DAY;
+  #currentSortType = this.#defaultSortType;
 
   constructor({infoContainer, contentContainer, filtersContainer, pointModel}) {
     this.infoContainer = infoContainer;
@@ -30,33 +33,78 @@ export default class MainPresenter {
   }
 
   init() {
-    this.#points = this.#pointModel.points;
-    this.#destinations = this.#pointModel.destinations;
-    this.#offers = this.#pointModel.offers;
+    this.#points = [...this.#pointModel.points];
+    this.#destinations = [...this.#pointModel.destinations];
+    this.#offers = [...this.#pointModel.offers];
     const filters = generateFilter(this.#points);
 
     render(this.#tripInfoComponent, this.infoContainer, RenderPosition.AFTERBEGIN);
     render(new FiltersView({filters}), this.filtersContainer);
     render(this.#addButtonComponent, this.infoContainer);
 
-    this.#renderWithoutContent(this.#points);
-    this.#renderContent(this.#points, this.#offers, this.#destinations);
+    this.#renderWithoutContent();
+    this.#renderContent();
   }
 
-  #renderWithoutContent = (points) => {
-    if (points.length === 0) {
+  #renderWithoutContent = () => {
+    if (this.#points.length === 0) {
       render(new EventsMessageView(EVENTS_MESSAGE.EMPTY), this.contentContainer);
     }
   };
 
-  #renderContent = (points, offers, destinations) => {
-    render(this.#sortComponent, this.contentContainer);
-    render(this.#listComponent, this.contentContainer);
-    this.#renderPoints(points, offers, destinations);
+  #renderContent = () => {
+    this.#renderSortTypes();
+    this.#renderContainer();
+    this.#sortPoints(this.#defaultSortType);
+    this.#renderPoints();
+    // render(this.#sortComponent, this.contentContainer);
+    // render(this.#listComponent, this.contentContainer);
+    // this.#renderPoints(points, offers, destinations);
   };
 
-  #renderPoints = (points, offers, destinations) => {
-    points.forEach((point) => this.#renderPoint(point, offers, destinations));
+  #renderSortTypes = () => {
+    const currentSortType = this.#currentSortType;
+    const onSortTypeChange = this.#handleSortTypeChange;
+
+    this.#sortComponent = new SortView({ currentSortType, onSortTypeChange });
+
+    render(this.#sortComponent, this.contentContainer);
+  };
+
+  #handleSortTypeChange = (sortType) => {
+    this.#clearPoints();
+    this.#sortPoints(sortType);
+    this.#renderPoints();
+  };
+
+  #sortPoints = (sortType) => {
+    switch (sortType) {
+      case 'day':
+        this.#points.sort(sortByDate('dateFrom'));
+        break;
+      case 'time':
+        this.#points.sort(sortByDuration('dateFrom', 'dateTo'));
+        break;
+      case 'price':
+        this.#points.sort(sortByValue('basePrice'));
+        break;
+      default: this.#points.sort(sortByDate('dateFrom'));
+    }
+
+    this.#currentSortType = sortType;
+  };
+
+  #clearPoints = () => {
+    this.#pointPresenters.forEach((presenter) => presenter.destroy());
+    this.#pointPresenters.clear();
+  };
+
+  #renderContainer = () => {
+    render(this.#listComponent, this.contentContainer);
+  };
+
+  #renderPoints = () => {
+    this.#points.forEach((point) => this.#renderPoint(point, this.#offers, this.#destinations));
   };
 
   #renderPoint = (point, offers, destinations) => {

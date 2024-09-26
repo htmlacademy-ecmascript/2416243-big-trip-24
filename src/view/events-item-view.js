@@ -89,13 +89,7 @@ export default class EventsItemView extends AbstractView {
     return createEventItemTemplate(this.#point, this.#offers, this.#destinations);
   }
 
-  #editClickHandler = (event) => {
-    event.preventDefault();
-    this.#handleEditClick();
-  };
+  #editClickHandler = () => this.#handleEditClick();
 
-  #favoriteClickHandler = (event) => {
-    event.preventDefault();
-    this.#handleFavoriteClick();
-  };
+  #favoriteClickHandler = () => this.#handleFavoriteClick();
 }
