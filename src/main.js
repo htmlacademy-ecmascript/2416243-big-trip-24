@@ -1,4 +1,4 @@
-import Presenter from './presenter/presenter.js';
+import MainPresenter from './presenter/main-presenter.js';
 import PointModel from './model/point-model.js';
 
 const tripMainElement = document.querySelector('.trip-main');
@@ -8,7 +8,7 @@ const filtersElement = document.querySelector('.trip-controls__filters');
 const pointModel = new PointModel();
 pointModel.init();
 
-const presenter = new Presenter({
+const presenter = new MainPresenter({
   infoContainer: tripMainElement,
   contentContainer: tripEventsElement,
   filtersContainer: filtersElement,
