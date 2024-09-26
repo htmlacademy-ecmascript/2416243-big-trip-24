@@ -67,7 +67,7 @@ const createEventDetailsTemplate = (defaultOffers, selectedOffers, description, 
     </section>`;
 };
 
-const createEventEditorTemplate = (point, destinations, offers)=> {
+const createEventEditorTemplate = (point, offers, destinations)=> {
   const eventDestination = destinations.find((item) => item.id === point.destination);
   const defaultOffers = offers.find((offer) => offer.type === point.type).offers;
   const selectedOffers = defaultOffers.filter((defaultOffer) => point.offers.includes(defaultOffer.id));
@@ -137,31 +137,32 @@ const createEventEditorTemplate = (point, destinations, offers)=> {
 };
 
 export default class EventEditorView extends AbstractView {
-  #point = null;
-  #destinations = null;
-  #offers = null;
+  #point = [];
+  #destinations = [];
+  #offers = [];
+
   #handleFormSubmit = null;
   #handleEditClick = null;
 
-  constructor({point, destinations, offers, onFormSubmit, onEditClick}) {
+  constructor({ point, offers, destinations, onEditClick, onFormSubmit }) {
     super();
     this.#point = point;
-    this.#destinations = destinations;
     this.#offers = offers;
-    this.#handleFormSubmit = onFormSubmit;
+    this.#destinations = destinations;
     this.#handleEditClick = onEditClick;
+    this.#handleFormSubmit = onFormSubmit;
 
     this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandler);
   }
 
   get template() {
-    return createEventEditorTemplate(this.#point, this.#destinations, this.#offers);
+    return createEventEditorTemplate(this.#point, this.#offers, this.#destinations);
   }
 
   #formSubmitHandler = (event) => {
     event.preventDefault();
-    this.#handleFormSubmit();
+    this.#handleFormSubmit(this.#point);
   };
 
   #editClickHandler = (event) => {

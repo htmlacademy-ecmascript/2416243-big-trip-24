@@ -32,4 +32,4 @@ export const isDatePast = (end) => dayjs().isAfter(end);
 
 export const getCapitalized = (word) => `${word[0].toUpperCase()}${word.slice(1)}`;
 
-
+export const updateItem = (items, update) => items.map((item) => item.id === update.id ? update : item);
