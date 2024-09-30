@@ -57,9 +57,6 @@ export default class MainPresenter {
     this.#renderContainer();
     this.#sortPoints(this.#defaultSortType);
     this.#renderPoints();
-    // render(this.#sortComponent, this.contentContainer);
-    // render(this.#listComponent, this.contentContainer);
-    // this.#renderPoints(points, offers, destinations);
   };
 
   #renderSortTypes = () => {
