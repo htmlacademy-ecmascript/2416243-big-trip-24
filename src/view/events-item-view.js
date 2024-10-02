@@ -1,6 +1,6 @@
 import AbstractView from '../framework/view/abstract-view.js';
 import { calculateDuration, convertDate, convertDuration, getCapitalized } from '../util/utils.js';
-import { DATE_TIME_FORMAT } from '../constants.js';
+import { DateFormat } from '../constants.js';
 
 const createEventSelectedOffersTemplate = (selectedOffers) => {
   if (selectedOffers.length === 0) {
@@ -25,9 +25,9 @@ const createEventItemTemplate = (point, offers, destinations) => {
   const selectedOffers = defaultOffers.filter((defaultOffer) => point.offers.includes(defaultOffer.id));
   const destination = destinations.find((item) => item.id === point.destination);
 
-  const startDate = convertDate(dateFrom, DATE_TIME_FORMAT.SHORT_DATE);
-  const startTime = convertDate(dateFrom, DATE_TIME_FORMAT.TIME);
-  const endTime = convertDate(dateTo, DATE_TIME_FORMAT.TIME);
+  const startDate = convertDate(dateFrom, DateFormat.SHORT_DATE);
+  const startTime = convertDate(dateFrom, DateFormat.TIME);
+  const endTime = convertDate(dateTo, DateFormat.TIME);
   const duration = convertDuration(calculateDuration(dateFrom, dateTo));
   const favorite = isFavorite ? 'event__favorite-btn--active' : '';
 

@@ -1,6 +1,8 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view';
 import { convertDate, getCapitalized } from '../util/utils.js';
-import { DATE_TIME_FORMAT, EVENT_TYPES } from '../constants.js';
+import { DateFormat, EVENT_TYPES } from '../constants.js';
+import flatpickr from 'flatpickr';
+import 'flatpickr/dist/flatpickr.min.css';
 
 const createEventTypeItemTemplate = (type, pointId) => `
   ${EVENT_TYPES.map((eventType) => (`
@@ -89,8 +91,8 @@ const createEventEditorTemplate = (point, offers, destinations)=> {
   const { description, name, pictures } = eventDestination || {};
   const pointId = point.id || 0;
 
-  const startTime = convertDate(dateFrom, DATE_TIME_FORMAT.DATE_AND_TIME);
-  const endTime = convertDate(dateTo, DATE_TIME_FORMAT.DATE_AND_TIME);
+  const startTime = convertDate(dateFrom, DateFormat.DATE_AND_TIME);
+  const endTime = convertDate(dateTo, DateFormat.DATE_AND_TIME);
 
   return `
     <li class="trip-events__item">
@@ -162,6 +164,8 @@ export default class EventEditorView extends AbstractStatefulView {
 
   #handleFormSubmit = null;
   #handleEditClick = null;
+  #dateFromPicker = null;
+  #dateToPicker = null;
 
   constructor({ point, offers, destinations, onEditClick, onFormSubmit }) {
     super();
@@ -197,6 +201,21 @@ export default class EventEditorView extends AbstractStatefulView {
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#changeDestinationHandler);
     this.element.querySelector('.event__available-offers')?.addEventListener('change', this.#changeAvailableOffersHandler);
     this.element.querySelector('.event__field-group--price').addEventListener('input', this.#changePriceHandler);
+
+    this.#setDatePicker();
+  }
+
+  removeElement() {
+    super.removeElement();
+
+    if (this.#dateFromPicker) {
+      this.#dateFromPicker.destroy();
+      this.#dateFromPicker = null;
+    }
+    if (this.#dateToPicker) {
+      this.#dateToPicker.destroy();
+      this.#dateToPicker = null;
+    }
   }
 
   #formSubmitHandler = (event) => {
@@ -229,6 +248,43 @@ export default class EventEditorView extends AbstractStatefulView {
   #changePriceHandler = (event) => {
     this._setState({
       basePrice: parseInt(event.target.value, 10)
+    });
+  };
+
+  #setDatePicker = () => {
+    const startTime = this.element.querySelector(`#event-start-time-${this._state.id}`);
+    const endTime = this.element.querySelector(`#event-end-time-${this._state.id}`);
+
+    const generalFlatpickrConfig = {
+      enableTime: true,
+      'time_24hr': true,
+      dateFormat: DateFormat.DATE_PICKED
+    };
+
+    this.#dateFromPicker = flatpickr(
+      startTime,
+      {
+        ...generalFlatpickrConfig,
+        maxDate: this._state.dateTo,
+        onChange: this.#changeDateHandler('dateFrom'),
+        onClose: (_, userDate) => this.#dateToPicker.set('minDate', userDate)
+      }
+    );
+
+    this.#dateToPicker = flatpickr(
+      endTime,
+      {
+        ...generalFlatpickrConfig,
+        maxDate: this._state.dateFrom,
+        onChange: this.#changeDateHandler('dateTo'),
+        onClose: (_, userDate) => this.#dateFromPicker.set('maxDate', userDate)
+      }
+    );
+  };
+
+  #changeDateHandler = (name) => ([userDate]) => {
+    this._setState({
+      [name]: userDate
     });
   };
 }
