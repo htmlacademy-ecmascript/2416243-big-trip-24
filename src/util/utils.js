@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
-import { DATE_TIME_FORMAT } from '../constants.js';
+import { DateFormat } from '../constants.js';
 
 export const getRandomInteger = (min = 1, max = 100) => Math.round(Math.random() * Math.abs(max - min)) + min;
 
@@ -14,14 +14,14 @@ export const calculateDuration = (start, end) => dayjs.duration(dayjs(end).diff(
 
 export const convertDuration = (value) => {
   if (value.get('day')) {
-    return value.format(DATE_TIME_FORMAT.D_H_M_DURATION);
+    return value.format(DateFormat.D_H_M_DURATION);
   }
 
   if (!value.get('day') && value.get('hour')) {
-    return value.format(DATE_TIME_FORMAT.H_M_DURATION);
+    return value.format(DateFormat.H_M_DURATION);
   }
 
-  return value.format(DATE_TIME_FORMAT.M_DURATION);
+  return value.format(DateFormat.M_DURATION);
 };
 
 export const isDateFuture = (start) => dayjs().isBefore(start);

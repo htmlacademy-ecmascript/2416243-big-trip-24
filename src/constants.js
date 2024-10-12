@@ -71,13 +71,20 @@ export const TRIP_SORT_ITEMS = [
   },
 ];
 
-export const DATE_TIME_FORMAT = {
+export const DateFormat = {
   SHORT_DATE: 'MMM D',
   DATE_AND_TIME: 'DD/MM/YY HH:mm',
   TIME: 'HH:mm',
   D_H_M_DURATION: 'DD[D] HH[H] mm[M]',
   H_M_DURATION: 'HH[H] mm[M]',
-  M_DURATION: 'mm[M]'
+  M_DURATION: 'mm[M]',
+  DATE_PICKED: 'd/m/y H:i'
+};
+
+export const generalFlatpickrConfig = {
+  enableTime: true,
+  'time_24hr': true,
+  dateFormat: DateFormat.DATE_PICKED
 };
 
 export const EVENTS_MESSAGE = {
