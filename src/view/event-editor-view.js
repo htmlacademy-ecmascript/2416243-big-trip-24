@@ -1,6 +1,6 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view';
 import { convertDate, getCapitalized } from '../util/utils.js';
-import { DateFormat, EVENT_TYPES } from '../constants.js';
+import { DateFormat, EVENT_TYPES, generalFlatpickrConfig } from '../constants.js';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 
@@ -254,12 +254,6 @@ export default class EventEditorView extends AbstractStatefulView {
   #setDatePicker = () => {
     const startTime = this.element.querySelector(`#event-start-time-${this._state.id}`);
     const endTime = this.element.querySelector(`#event-end-time-${this._state.id}`);
-
-    const generalFlatpickrConfig = {
-      enableTime: true,
-      'time_24hr': true,
-      dateFormat: DateFormat.DATE_PICKED
-    };
 
     this.#dateFromPicker = flatpickr(
       startTime,

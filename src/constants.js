@@ -81,6 +81,12 @@ export const DateFormat = {
   DATE_PICKED: 'd/m/y H:i'
 };
 
+export const generalFlatpickrConfig = {
+  enableTime: true,
+  'time_24hr': true,
+  dateFormat: DateFormat.DATE_PICKED
+};
+
 export const EVENTS_MESSAGE = {
   EMPTY: 'Click New Event to create your first point',
   LOADING: 'Loading...'
