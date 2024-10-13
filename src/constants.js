@@ -126,3 +126,26 @@ export const SortType = {
     disabled: true
   }
 };
+
+export const UpdateType = {
+  PATCH: 'PATCH',
+  MINOR: 'MINOR',
+  MAJOR: 'MAJOR'
+};
+
+export const DEFAULT_POINT = {
+  id: 0,
+  basePrice: 0,
+  dateFrom: new Date().toISOString(),
+  dateTo: new Date().toISOString(),
+  destination: 0,
+  isFavorite: false,
+  offers: [],
+  type: DEFAULT_EVENT_TYPE
+};
+
+export const UserAction = {
+  UPDATE_POINT: 'UPDATE POINT',
+  ADD_POINT: 'ADD POINT',
+  DELETE_POINT: 'DELETE POINT'
+};
