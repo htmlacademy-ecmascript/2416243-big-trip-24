@@ -3,6 +3,7 @@ import { convertDate, getCapitalized } from '../util/utils.js';
 import { DateFormat, EVENT_TYPES, generalFlatpickrConfig } from '../constants.js';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
+import he from 'he';
 
 const createEventTypeItemTemplate = (type, pointId) => `
   ${EVENT_TYPES.map((eventType) => (`
@@ -42,7 +43,7 @@ const createEventAvailableOffersTemplate = (defaultOffers, selectedOffers, point
           type="checkbox"
           name="event-offer-${convertOfferTitle(defaultOffer.title)}"
           ${selectedOffers.map((selectedOffer) => selectedOffer.id).includes(defaultOffer.id) ? 'checked' : ''}>
-        <label class="event__offer-label" for="event-offer-${convertOfferTitle(defaultOffer.title)}-1">
+        <label class="event__offer-label" for="event-offer-${convertOfferTitle(defaultOffer.title)}-${pointId}">
           <span class="event__offer-title">${defaultOffer.title}</span>
           &plus;&euro;&nbsp;
           <span class="event__offer-price">${defaultOffer.price}</span>
@@ -124,8 +125,10 @@ const createEventEditorTemplate = (point, offers, destinations)=> {
               id="event-destination-${pointId}"
               type="text"
               name="event-destination"
-              value="${name || ''}"
-              list="destination-list-${pointId}">
+              value="${he.encode(name || '')}"
+              list="destination-list-${pointId}"
+              autocomplete="off"
+              required>
             <datalist id="destination-list-${pointId}">
               ${createEventDestinationListTemplate(destinations)}
             </datalist>
@@ -144,7 +147,7 @@ const createEventEditorTemplate = (point, offers, destinations)=> {
               <span class="visually-hidden">Price</span>
               &euro;
             </label>
-            <input class="event__input  event__input--price" id="event-price-${pointId}" type="text" name="event-price" value="${basePrice}">
+            <input class="event__input  event__input--price" id="event-price-${pointId}" type="number" name="event-price" value="${basePrice}">
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -164,16 +167,20 @@ export default class EventEditorView extends AbstractStatefulView {
 
   #handleFormSubmit = null;
   #handleEditClick = null;
+  #handleDeleteClick = null;
+
   #dateFromPicker = null;
   #dateToPicker = null;
 
-  constructor({ point, offers, destinations, onEditClick, onFormSubmit }) {
+  constructor({ point, offers, destinations, onEditClick, onFormSubmit, onDeleteClick }) {
     super();
     this._setState(EventEditorView.parsePointToState(point));
     this.#offers = offers;
     this.#destinations = destinations;
+
     this.#handleEditClick = onEditClick;
     this.#handleFormSubmit = onFormSubmit;
+    this.#handleDeleteClick = onDeleteClick;
 
     this._restoreHandlers();
   }
@@ -197,6 +204,7 @@ export default class EventEditorView extends AbstractStatefulView {
   _restoreHandlers() {
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandler);
     this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
+    this.element.querySelector('form').addEventListener('reset', this.#formDeleteClickHandler);
     this.element.querySelector('.event__type-group').addEventListener('change', this.#changeTypeHandler);
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#changeDestinationHandler);
     this.element.querySelector('.event__available-offers')?.addEventListener('change', this.#changeAvailableOffersHandler);
@@ -232,9 +240,15 @@ export default class EventEditorView extends AbstractStatefulView {
   };
 
   #changeDestinationHandler = (event) => {
-    this.updateElement({
-      destination: this.#destinations.find((destination) => destination.name === event.target.value).id
-    });
+    const newDestination = this.#destinations.find((destination) => destination.name === event.target.value);
+
+    if (newDestination) {
+      this.updateElement({
+        destination: newDestination.id
+      });
+    }
+
+    event.target.value = '';
   };
 
   #changeAvailableOffersHandler = () => {
@@ -280,5 +294,10 @@ export default class EventEditorView extends AbstractStatefulView {
     this._setState({
       [name]: userDate
     });
+  };
+
+  #formDeleteClickHandler = (event) => {
+    event.preventDefault();
+    this.#handleDeleteClick(EventEditorView.parseStateToPoint(this._state));
   };
 }

@@ -1,8 +1,7 @@
-import { render, replace, remove } from '../framework/render.js';
-import { Mode } from '../constants.js';
-
 import EventEditorView from '../view/event-editor-view.js';
 import EventsItemView from '../view/events-item-view.js';
+import { render, replace, remove } from '../framework/render.js';
+import { Mode, UserAction, UpdateType } from '../constants.js';
 
 export default class PointPresenter {
   #listComponent = null;
@@ -18,7 +17,7 @@ export default class PointPresenter {
 
   #mode = Mode.DEFAULT;
 
-  constructor({listComponent, onDataChange, onModeChange}) {
+  constructor({ listComponent, onDataChange, onModeChange }) {
     this.#listComponent = listComponent;
     this.#handleDataChange = onDataChange;
     this.#handleModeChange = onModeChange;
@@ -45,7 +44,8 @@ export default class PointPresenter {
       offers: this.#offers,
       destinations: this.#destinations,
       onEditClick: this.#handleCloseClick,
-      onFormSubmit: this.#handleFormSubmit
+      onFormSubmit: this.#handleFormSubmit,
+      onDeleteClick: this.#handleDeleteClick
     });
 
     if (prevEventComponent === null || prevEventEditorComponent === null) {
@@ -108,11 +108,27 @@ export default class PointPresenter {
   };
 
   #handleFormSubmit = (point) => {
-    this.#handleDataChange(point);
+    this.#handleDataChange(
+      UserAction.UPDATE_POINT,
+      UpdateType.MINOR,
+      point);
     this.#replaceFormToPoint();
   };
 
   #handleFavoriteClick = () => {
-    this.#handleDataChange({...this.#point, isFavorite: !this.#point.isFavorite});
+    this.#handleDataChange(
+      UserAction.UPDATE_POINT,
+      UpdateType.PATCH,
+      {...this.#point, isFavorite: !this.#point.isFavorite}
+    );
+  };
+
+  #handleDeleteClick = (point) => {
+    this.#handleDataChange(
+      UserAction.DELETE_POINT,
+      UpdateType.MINOR,
+      point
+    );
+    this.#replaceFormToPoint();
   };
 }
