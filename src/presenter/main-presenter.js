@@ -4,9 +4,10 @@ import SortView from '../view/sort-view.js';
 import EventAddButtonView from '../view/event-add-button-view.js';
 import EventsMessageView from '../view/events-message-view.js';
 import PointPresenter from './point-presenter.js';
-import NewPointPresenter from './new-point-presenter';
+import NewPointPresenter from './new-point-presenter.js';
+
 import { remove, render, RenderPosition } from '../framework/render.js';
-import { FilterMessage, FilterType, SortType, UpdateType, UserAction } from '../constants.js';
+import { EVENTS_MESSAGE, FilterMessage, FilterType, SortType, UpdateType, UserAction } from '../constants.js';
 import { sortByDate, sortByDuration, sortByValue } from '../util/utils.js';
 import { filter } from '../util/filters.js';
 
@@ -27,6 +28,7 @@ export default class MainPresenter {
   #defaultSortType = SortType.DAY;
   #currentSortType = this.#defaultSortType;
   #filterType = FilterType.EVERYTHING;
+  #isLoading = true;
 
   constructor({ infoContainer, contentContainer, pointModel, filterModel }) {
     this.infoContainer = infoContainer;
@@ -98,6 +100,12 @@ export default class MainPresenter {
   };
 
   #renderMessage = () => {
+    if (this.#isLoading) {
+      this.#messageComponent = new EventsMessageView(EVENTS_MESSAGE.LOADING);
+      render(this.#messageComponent, this.contentContainer);
+      return;
+    }
+
     if (this.points.length === 0) {
       const filterMessage = FilterMessage[this.#filterType];
 
@@ -113,7 +121,6 @@ export default class MainPresenter {
     this.#sortComponent = new SortView({ currentSortType, onSortTypeChange });
     render(this.#sortComponent, this.contentContainer, RenderPosition.AFTERBEGIN);
   };
-
 
   #renderContainer = () => {
     render(this.#listComponent, this.contentContainer);
@@ -150,24 +157,24 @@ export default class MainPresenter {
     }
   };
 
-  #handleViewAction = (actionType, updateType, updatedPoint) => {
+  #handleViewAction = (actionType, updateType, point) => {
     switch (actionType) {
       case UserAction.UPDATE_POINT:
-        this.#pointModel.updatePoint(updateType, updatedPoint);
+        this.#pointModel.updatePoint(updateType, point);
         break;
       case UserAction.ADD_POINT:
-        this.#pointModel.addPoint(updateType, updatedPoint);
+        this.#pointModel.addPoint(updateType, point);
         break;
       case UserAction.DELETE_POINT:
-        this.#pointModel.deletePoint(updateType, updatedPoint);
+        this.#pointModel.deletePoint(updateType, point);
         break;
     }
   };
 
-  #handleModelEvent = (updateType, updatedPoint) => {
+  #handleModelEvent = (updateType, point) => {
     switch (updateType) {
       case UpdateType.PATCH:
-        this.#pointPresenters.get(updatedPoint.id).init(updatedPoint, this.offers, this.destinations);
+        this.#pointPresenters.get(point.id).init(point, this.offers, this.destinations);
         break;
       case UpdateType.MINOR:
         this.#clearContent();
@@ -175,6 +182,12 @@ export default class MainPresenter {
         break;
       case UpdateType.MAJOR:
         this.#currentSortType = this.#defaultSortType;
+        this.#clearContent();
+        this.#renderContent();
+        break;
+      case UpdateType.INIT:
+        this.#isLoading = false;
+        remove(this.#messageComponent);
         this.#clearContent();
         this.#renderContent();
         break;

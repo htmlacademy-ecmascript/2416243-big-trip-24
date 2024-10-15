@@ -53,6 +53,19 @@ const createEventAvailableOffersTemplate = (defaultOffers, selectedOffers, point
   </section>`;
 };
 
+const createPicturesTemplate = (pictures) => {
+  if (pictures.length === 0) {
+    return '';
+  }
+
+  return `
+  <div class="event__photos-container">
+    <div class="event__photos-tape">
+      ${pictures.map((picture) => (`<img class="event__photo" src="${picture.src}" alt="${picture.description}">`)).join('')}
+    </div>
+  </div>`;
+};
+
 const createEventSectionDestinationTemplate = (description, pictures) => {
   if (!description) {
     return '';
@@ -63,11 +76,7 @@ const createEventSectionDestinationTemplate = (description, pictures) => {
     <h3 class="event__section-title  event__section-title--destination">Destination</h3>
     <p class="event__destination-description">${description}</p>
 
-    <div class="event__photos-container">
-      <div class="event__photos-tape">
-        ${pictures.map((picture) => (`<img class="event__photo" src="${picture.src}" alt="${picture.description}">`)).join('')}
-      </div>
-    </div>
+    ${createPicturesTemplate(pictures)}
   </section>`;
 };
 

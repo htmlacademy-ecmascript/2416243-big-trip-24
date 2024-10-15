@@ -1,3 +1,5 @@
+import { generateToken } from './util/token.js';
+
 export const CITIES = [
   'Paris',
   'London',
@@ -130,7 +132,8 @@ export const SortType = {
 export const UpdateType = {
   PATCH: 'PATCH',
   MINOR: 'MINOR',
-  MAJOR: 'MAJOR'
+  MAJOR: 'MAJOR',
+  INIT: 'INIT'
 };
 
 export const DEFAULT_POINT = {
@@ -149,3 +152,12 @@ export const UserAction = {
   ADD_POINT: 'ADD POINT',
   DELETE_POINT: 'DELETE POINT'
 };
+
+export const Method = {
+  GET: 'GET',
+  PUT: 'PUT'
+};
+
+export const END_POINT = 'https://24.objects.htmlacademy.pro/big-trip';
+
+export const Authorization = generateToken();

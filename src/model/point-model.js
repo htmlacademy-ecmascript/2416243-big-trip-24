@@ -1,25 +1,17 @@
 import Observable from '../framework/observable.js';
-import { points } from '../mocks/points.js';
-import { destinations } from '../mocks/destinations.js';
-import { offers } from '../mocks/offers.js';
 import { updateItem } from '../util/utils.js';
+import { UpdateType } from '../constants.js';
 
 export default class PointModel extends Observable {
-  #points = null;
-  #destinations = null;
-  #offers = null;
+  #pointsApiService = null;
 
-  constructor() {
+  #points = [];
+  #destinations = [];
+  #offers = [];
+
+  constructor({ pointsApiService }) {
     super();
-    this.#points = [];
-    this.#destinations = [];
-    this.#offers = [];
-  }
-
-  init() {
-    this.#points = points;
-    this.#destinations = destinations;
-    this.#offers = offers;
+    this.#pointsApiService = pointsApiService;
   }
 
   get points() {
@@ -34,18 +26,34 @@ export default class PointModel extends Observable {
     return this.#offers;
   }
 
-  updatePoint(updateType, updatedPoint) {
+  async init() {
+    try {
+      this.#points = await this.#pointsApiService.getPoints();
+      this.#offers = await this.#pointsApiService.getOffers();
+      this.#destinations = await this.#pointsApiService.getDestinations();
+    } catch {
+      this.#points = [];
+      this.#offers = [];
+      this.#destinations = [];
+    }
+
+    this._notify(UpdateType.INIT);
+  }
+
+  async updatePoint(updateType, point) {
+    const updatedPoint = await this.#pointsApiService.updatePoint(point);
     this.#points = updateItem(this.#points, updatedPoint);
     this._notify(updateType, updatedPoint.id);
   }
 
-  addPoint(updateType, updatedPoint) {
-    this.#points.push(updatedPoint);
-    this._notify(updateType, updatedPoint);
+  async addPoint(updateType, point) {
+    const newPoint = await this.#pointsApiService.addPoint(point);
+    this.#points.push(newPoint);
+    this._notify(updateType);
   }
 
-  deletePoint(updateType, updatedPoint) {
-    this.#points = this.#points.filter((item) => item.id !== updatedPoint.id);
-    this._notify(updateType, updatedPoint);
+  deletePoint(updateType, point) {
+    this.#points = this.#points.filter((item) => item.id !== point.id);
+    this._notify(updateType, point);
   }
 }

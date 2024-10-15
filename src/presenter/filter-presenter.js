@@ -1,4 +1,5 @@
 import FiltersView from '../view/filters-view.js';
+
 import { render, replace, remove } from '../framework/render.js';
 import { filter } from '../util/filters.js';
 import { FilterType, UpdateType } from '../constants.js';
@@ -7,12 +8,13 @@ export default class FilterPresenter {
   #pointModel = null;
   #filterModel = null;
 
+  #filterContainer = null;
   #filterComponent = null;
 
   constructor({ pointModel, filterModel, filterContainer }) {
     this.#pointModel = pointModel;
     this.#filterModel = filterModel;
-    this.filterContainer = filterContainer;
+    this.#filterContainer = filterContainer;
 
     this.#pointModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
@@ -33,7 +35,7 @@ export default class FilterPresenter {
     this.#filterComponent = new FiltersView({ filters, currentFilterType, onFilterTypeChange });
 
     if (prevFilterComponent === null) {
-      render(this.#filterComponent, this.filterContainer);
+      render(this.#filterComponent, this.#filterContainer);
       return;
     }
 
