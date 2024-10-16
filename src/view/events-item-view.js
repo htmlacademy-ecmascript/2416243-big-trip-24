@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { calculateDuration, convertDate, convertDuration, getCapitalized } from '../util/utils.js';
+import { calculateDuration, convertDate, convertDuration, getCapitalized } from '../utils/general.js';
 import { DateFormat } from '../constants.js';
 import he from 'he';
 
@@ -26,7 +26,7 @@ const createEventItemTemplate = (point, offers, destinations) => {
   const selectedOffers = defaultOffers.filter((defaultOffer) => point.offers.includes(defaultOffer.id));
   const destination = destinations.find((item) => item.id === point.destination);
 
-  const startDate = convertDate(dateFrom, DateFormat.SHORT_DATE);
+  const startDate = convertDate(dateFrom, DateFormat.MONTH_DAY);
   const startTime = convertDate(dateFrom, DateFormat.TIME);
   const endTime = convertDate(dateTo, DateFormat.TIME);
   const duration = convertDuration(calculateDuration(dateFrom, dateTo));

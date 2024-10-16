@@ -4,6 +4,7 @@ import FilterModel from './model/filter-model.js';
 import FilterPresenter from './presenter/filter-presenter.js';
 import PointsApiService from './server/points-api-service.js';
 import { END_POINT, Authorization } from './constants.js';
+import TripInfoPresenter from './presenter/trip-info-presenter';
 
 const tripMainElement = document.querySelector('.trip-main');
 const tripEventsElement = document.querySelector('.trip-events');
@@ -15,6 +16,9 @@ const filterModel = new FilterModel();
 
 pointModel.init();
 
+const tripInfoPresenter = new TripInfoPresenter({
+  infoContainer: tripMainElement,
+  pointModel: pointModel });
 const filterPresenter = new FilterPresenter({
   pointModel: pointModel,
   filterModel: filterModel,
@@ -27,5 +31,6 @@ const mainPresenter = new MainPresenter({
   filterModel: filterModel
 });
 
+tripInfoPresenter.init();
 filterPresenter.init();
 mainPresenter.init();

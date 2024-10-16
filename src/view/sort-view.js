@@ -1,6 +1,6 @@
 import AbstractView from '../framework/view/abstract-view.js';
 import { SortType } from '../constants.js';
-import { getCapitalized } from '../util/utils.js';
+import { getCapitalized } from '../utils/general.js';
 
 const createTripSortItemTemplate = (name, isDisabled, currentSortType) => `
     <div class="trip-sort__item  trip-sort__item--${name}">

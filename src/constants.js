@@ -1,29 +1,3 @@
-import { generateToken } from './util/token.js';
-
-export const CITIES = [
-  'Paris',
-  'London',
-  'Chicago',
-  'Tokio',
-  'New York',
-  'Moscow',
-  'Amsterdam',
-  'San-Francisco'
-];
-
-export const CITY_DESCRIPTIONS = [
-  'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget.',
-  'Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra.',
-  'Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante.',
-  'Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum.',
-  'Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui.'
-];
-
-export const PRICE = {
-  MIN: 10,
-  MAX: 1000
-};
-
 export const EVENT_TYPES = [
   'taxi',
   'bus',
@@ -45,36 +19,9 @@ export const FilterType = {
   FUTURE: 'future'
 };
 
-export const TRIP_SORT_ITEMS = [
-  {
-    key: 'day',
-    checked: true,
-    disabled: false,
-  },
-  {
-    key: 'event',
-    checked: false,
-    disabled: true,
-  },
-  {
-    key: 'time',
-    checked: false,
-    disabled: false,
-  },
-  {
-    key: 'price',
-    checked: false,
-    disabled: false,
-  },
-  {
-    key: 'offer',
-    checked: false,
-    disabled: true,
-  },
-];
-
 export const DateFormat = {
-  SHORT_DATE: 'MMM D',
+  DAY_MONTH: 'D MMM',
+  MONTH_DAY: 'MMM D',
   DATE_AND_TIME: 'DD/MM/YY HH:mm',
   TIME: 'HH:mm',
   D_H_M_DURATION: 'DD[D] HH[H] mm[M]',
@@ -84,14 +31,15 @@ export const DateFormat = {
 };
 
 export const generalFlatpickrConfig = {
+  disableMobile: 'true',
   enableTime: true,
   'time_24hr': true,
   dateFormat: DateFormat.DATE_PICKED
 };
 
-export const EVENTS_MESSAGE = {
-  EMPTY: 'Click New Event to create your first point',
-  LOADING: 'Loading...'
+export const MESSAGE = {
+  LOADING: 'Loading...',
+  FAILED_LOAD: 'Failed to load latest route information'
 };
 
 export const FilterMessage = {
@@ -155,9 +103,18 @@ export const UserAction = {
 
 export const Method = {
   GET: 'GET',
-  PUT: 'PUT'
+  PUT: 'PUT',
+  POST: 'POST',
+  DELETE: 'DELETE'
 };
 
 export const END_POINT = 'https://24.objects.htmlacademy.pro/big-trip';
 
-export const Authorization = generateToken();
+export const Authorization = 'Basic FE49wwUYuvTvhn9vBjwv4';
+
+export const LIMIT_DISPLAYED_DESTINATIONS = 3;
+
+export const TimeLimit = {
+  LOWER_LIMIT: 350,
+  UPPER_LIMIT: 1000
+};

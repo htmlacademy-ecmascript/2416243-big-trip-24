@@ -1,5 +1,6 @@
 import EventEditorView from '../view/event-editor-view.js';
 import EventsItemView from '../view/events-item-view.js';
+
 import { render, replace, remove } from '../framework/render.js';
 import { Mode, UserAction, UpdateType } from '../constants.js';
 
@@ -58,7 +59,8 @@ export default class PointPresenter {
     }
 
     if (this.#mode === Mode.EDITING) {
-      replace(this.#eventEditorComponent, prevEventEditorComponent);
+      replace(this.#eventComponent, prevEventEditorComponent);
+      this.#mode = Mode.DEFAULT;
     }
 
     remove(prevEventComponent);
@@ -68,6 +70,41 @@ export default class PointPresenter {
   destroy() {
     remove(this.#eventComponent);
     remove(this.#eventEditorComponent);
+  }
+
+  setSaving() {
+    if (this.#mode === Mode.EDITING) {
+      this.#eventEditorComponent.updateElement({
+        isDisabled: true,
+        isSaving: true
+      });
+    }
+  }
+
+  setDeleting() {
+    if (this.#mode === Mode.EDITING) {
+      this.#eventEditorComponent.updateElement({
+        isDisabled: true,
+        isSaving: true
+      });
+    }
+  }
+
+  setAborting() {
+    if (this.#mode === Mode.DEFAULT) {
+      this.#eventComponent.shake();
+      return;
+    }
+
+    const resetFormState = () => {
+      this.#eventEditorComponent.updateElement({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false
+      });
+    };
+
+    this.#eventEditorComponent.shake(resetFormState);
   }
 
   resetView() {
@@ -111,8 +148,8 @@ export default class PointPresenter {
     this.#handleDataChange(
       UserAction.UPDATE_POINT,
       UpdateType.MINOR,
-      point);
-    this.#replaceFormToPoint();
+      point
+    );
   };
 
   #handleFavoriteClick = () => {
@@ -129,6 +166,5 @@ export default class PointPresenter {
       UpdateType.MINOR,
       point
     );
-    this.#replaceFormToPoint();
   };
 }

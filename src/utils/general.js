@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
+import minMax from 'dayjs/plugin/minMax';
 import { DateFormat } from '../constants.js';
 
 export const getRandomInteger = (min = 1, max = 100) => Math.round(Math.random() * Math.abs(max - min)) + min;
@@ -7,6 +8,7 @@ export const getRandomInteger = (min = 1, max = 100) => Math.round(Math.random()
 export const getRandomArrayElement = (array) => array[getRandomInteger(0, array.length - 1)];
 
 dayjs.extend(duration);
+dayjs.extend(minMax);
 
 export const convertDate = (date, format) => date ? dayjs(date).format(format) : '';
 
@@ -44,3 +46,7 @@ export const sortByDuration = (start, end) => (a, b) => {
 };
 
 export const sortByValue = (value) => (a, b) => b[value] - a[value];
+
+export const getMinDate = (dates) => convertDate(dayjs.min(dates.map((date) =>dayjs(date))), DateFormat.DAY_MONTH);
+
+export const getMaxDate = (dates) => convertDate(dayjs.max(dates.map((date) =>dayjs(date))), DateFormat.DAY_MONTH);
