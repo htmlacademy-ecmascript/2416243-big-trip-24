@@ -9,7 +9,7 @@ export default class PointPresenter {
   #eventComponent = null;
   #eventEditorComponent = null;
 
-  #point = [];
+  #point = null;
   #offers = [];
   #destinations = [];
 
@@ -46,7 +46,7 @@ export default class PointPresenter {
       destinations: this.#destinations,
       onEditClick: this.#handleCloseClick,
       onFormSubmit: this.#handleFormSubmit,
-      onDeleteClick: this.#handleDeleteClick
+      onFormReset: this.#handleFormReset
     });
 
     if (prevEventComponent === null || prevEventEditorComponent === null) {
@@ -160,7 +160,7 @@ export default class PointPresenter {
     );
   };
 
-  #handleDeleteClick = (point) => {
+  #handleFormReset = (point) => {
     this.#handleDataChange(
       UserAction.DELETE_POINT,
       UpdateType.MINOR,

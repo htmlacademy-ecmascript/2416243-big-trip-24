@@ -31,7 +31,7 @@ export default class NewPointPresenter {
       destinations: this.#pointModel.destinations,
       onEditClick: this.#handleCloseClick,
       onFormSubmit: this.#handleFormSubmit,
-      onDeleteClick: this.#handleCancelClick
+      onFormReset: this.#handleFormReset
     });
 
     render(this.#eventEditorComponent, this.#listComponent, RenderPosition.AFTERBEGIN);
@@ -75,7 +75,7 @@ export default class NewPointPresenter {
     this.destroy();
   };
 
-  #handleCancelClick = () => {
+  #handleFormReset = () => {
     this.destroy();
   };
 

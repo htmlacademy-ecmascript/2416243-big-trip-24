@@ -5,8 +5,6 @@ import { DateFormat } from '../constants.js';
 
 export const getRandomInteger = (min = 1, max = 100) => Math.round(Math.random() * Math.abs(max - min)) + min;
 
-export const getRandomArrayElement = (array) => array[getRandomInteger(0, array.length - 1)];
-
 dayjs.extend(duration);
 dayjs.extend(minMax);
 
