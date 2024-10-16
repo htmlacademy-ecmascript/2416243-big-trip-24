@@ -1,5 +1,5 @@
 import Observable from '../framework/observable.js';
-import { updateItem } from '../util/utils.js';
+import { updateItem } from '../utils/general.js';
 import { UpdateType } from '../constants.js';
 
 export default class PointModel extends Observable {
@@ -9,9 +9,31 @@ export default class PointModel extends Observable {
   #destinations = [];
   #offers = [];
 
+  #isLoading = true;
+  #isLoadingFailed = false;
+
   constructor({ pointsApiService }) {
     super();
     this.#pointsApiService = pointsApiService;
+  }
+
+  async init() {
+    try {
+      this.#points = await this.#pointsApiService.getPoints();
+      this.#offers = await this.#pointsApiService.getOffers();
+      this.#destinations = await this.#pointsApiService.getDestinations();
+
+      this.#isLoading = false;
+    } catch {
+      this.#points = [];
+      this.#offers = [];
+      this.#destinations = [];
+
+      this.#isLoading = false;
+      this.#isLoadingFailed = true;
+    }
+
+    this._notify(UpdateType.INIT);
   }
 
   get points() {
@@ -26,18 +48,12 @@ export default class PointModel extends Observable {
     return this.#offers;
   }
 
-  async init() {
-    try {
-      this.#points = await this.#pointsApiService.getPoints();
-      this.#offers = await this.#pointsApiService.getOffers();
-      this.#destinations = await this.#pointsApiService.getDestinations();
-    } catch {
-      this.#points = [];
-      this.#offers = [];
-      this.#destinations = [];
-    }
+  get loading() {
+    return this.#isLoading;
+  }
 
-    this._notify(UpdateType.INIT);
+  get error() {
+    return this.#isLoadingFailed;
   }
 
   async updatePoint(updateType, point) {
@@ -52,7 +68,8 @@ export default class PointModel extends Observable {
     this._notify(updateType);
   }
 
-  deletePoint(updateType, point) {
+  async deletePoint(updateType, point) {
+    await this.#pointsApiService.deletePoint(point);
     this.#points = this.#points.filter((item) => item.id !== point.id);
     this._notify(updateType, point);
   }

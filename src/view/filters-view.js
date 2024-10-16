@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { getCapitalized } from '../util/utils.js';
+import { getCapitalized } from '../utils/general.js';
 
 const createTripFilterTypeTemplate = (filter, currentFilterType) => `
     <div class="trip-filters__filter">
