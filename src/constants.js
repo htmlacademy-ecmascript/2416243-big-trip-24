@@ -87,8 +87,8 @@ export const UpdateType = {
 export const DEFAULT_POINT = {
   id: 0,
   basePrice: 0,
-  dateFrom: new Date().toISOString(),
-  dateTo: new Date().toISOString(),
+  dateFrom: '',
+  dateTo: '',
   destination: 0,
   isFavorite: false,
   offers: [],
@@ -110,7 +110,7 @@ export const Method = {
 
 export const END_POINT = 'https://24.objects.htmlacademy.pro/big-trip';
 
-export const Authorization = 'Basic FE49wwUYuvTvhn9vBjwv4';
+export const AUTHORIZATION = 'Basic FE49wwUYuvTvhn9vBjwv4';
 
 export const LIMIT_DISPLAYED_DESTINATIONS = 3;
 

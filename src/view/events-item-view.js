@@ -67,7 +67,7 @@ const createEventItemTemplate = (point, offers, destinations) => {
 };
 
 export default class EventsItemView extends AbstractView {
-  #point = [];
+  #point = null;
   #destinations = [];
   #offers = [];
 

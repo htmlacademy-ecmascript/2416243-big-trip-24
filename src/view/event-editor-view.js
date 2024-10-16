@@ -207,11 +207,11 @@ const createEventEditorTemplate = (point, offers, destinations)=> {
           <button
             class="event__save-btn  btn  btn--blue"
             type="submit"
-            ${isDisabled ? 'disabled' : ''}>${isSaving ? 'Ssving...' : 'Save'}</button>
+            ${isSaving ? 'disabled' : ''}>${isSaving ? 'Saving...' : 'Save'}</button>
 
           <button
             class="event__reset-btn"
-            type="reset" ${isDisabled ? 'disabled' : ''}>${setButtonValue()}</button>
+            type="reset">${setButtonValue()}</button>
 
           ${createRollupButtonTemplate(point.id)}
         </header>
@@ -226,12 +226,12 @@ export default class EventEditorView extends AbstractStatefulView {
 
   #handleFormSubmit = null;
   #handleEditClick = null;
-  #handleDeleteClick = null;
+  #handleFormReset = null;
 
   #dateFromPicker = null;
   #dateToPicker = null;
 
-  constructor({ point, offers, destinations, onEditClick, onFormSubmit, onDeleteClick }) {
+  constructor({ point, offers, destinations, onEditClick, onFormSubmit, onFormReset }) {
     super();
     this._setState(EventEditorView.parsePointToState(point));
     this.#offers = offers;
@@ -239,7 +239,7 @@ export default class EventEditorView extends AbstractStatefulView {
 
     this.#handleEditClick = onEditClick;
     this.#handleFormSubmit = onFormSubmit;
-    this.#handleDeleteClick = onDeleteClick;
+    this.#handleFormReset = onFormReset;
 
     this._restoreHandlers();
   }
@@ -274,11 +274,11 @@ export default class EventEditorView extends AbstractStatefulView {
   _restoreHandlers() {
     this.element.querySelector('.event__rollup-btn')?.addEventListener('click', this.#editClickHandler);
     this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
-    this.element.querySelector('form').addEventListener('reset', this.#formDeleteClickHandler);
-    this.element.querySelector('.event__type-group').addEventListener('change', this.#changeTypeHandler);
-    this.element.querySelector('.event__input--destination').addEventListener('change', this.#changeDestinationHandler);
-    this.element.querySelector('.event__available-offers')?.addEventListener('change', this.#changeAvailableOffersHandler);
-    this.element.querySelector('.event__field-group--price').addEventListener('input', this.#changePriceHandler);
+    this.element.querySelector('form').addEventListener('reset', this.#formResetHandler);
+    this.element.querySelector('.event__type-group').addEventListener('change', this.#typeChangeHandler);
+    this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationChangeHandler);
+    this.element.querySelector('.event__available-offers')?.addEventListener('change', this.#availableOffersChangeHandler);
+    this.element.querySelector('.event__field-group--price').addEventListener('input', this.#priceInputHandler);
 
     this.#setDatePicker();
   }
@@ -303,13 +303,13 @@ export default class EventEditorView extends AbstractStatefulView {
 
   #editClickHandler = () => this.#handleEditClick();
 
-  #changeTypeHandler = (event) => {
+  #typeChangeHandler = (event) => {
     this.updateElement({
       type: event.target.value
     });
   };
 
-  #changeDestinationHandler = (event) => {
+  #destinationChangeHandler = (event) => {
     const newDestination = this.#destinations.find((destination) => destination.name === event.target.value);
 
     if (newDestination) {
@@ -321,7 +321,7 @@ export default class EventEditorView extends AbstractStatefulView {
     event.target.value = '';
   };
 
-  #changeAvailableOffersHandler = () => {
+  #availableOffersChangeHandler = () => {
     const selectedOffers = this.element.querySelectorAll('.event__offer-checkbox:checked');
 
     this._setState({
@@ -329,7 +329,7 @@ export default class EventEditorView extends AbstractStatefulView {
     });
   };
 
-  #changePriceHandler = (event) => {
+  #priceInputHandler = (event) => {
     this._setState({
       basePrice: parseInt(event.target.value, 10)
     });
@@ -366,8 +366,8 @@ export default class EventEditorView extends AbstractStatefulView {
     });
   };
 
-  #formDeleteClickHandler = (event) => {
+  #formResetHandler = (event) => {
     event.preventDefault();
-    this.#handleDeleteClick(EventEditorView.parseStateToPoint(this._state));
+    this.#handleFormReset(EventEditorView.parseStateToPoint(this._state));
   };
 }
