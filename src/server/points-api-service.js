@@ -1,9 +1,10 @@
 import ApiService from '../framework/api-service.js';
-import {Method} from '../constants.js';
+import { Method } from '../constants.js';
 
 export default class PointsApiService extends ApiService {
   async getPoints() {
     const response = await this._load({ url: 'points' });
+
     const parsedResponse = await ApiService.parseResponse(response);
 
     return parsedResponse.map(this.#adaptToClient);
@@ -75,6 +76,10 @@ export default class PointsApiService extends ApiService {
       'date_to': point.dateTo,
       'is_favorite': point.isFavorite
     };
+
+    if (point.id === 0) {
+      delete adaptedPoint.id;
+    }
 
     delete adaptedPoint.basePrice;
     delete adaptedPoint.dateFrom;

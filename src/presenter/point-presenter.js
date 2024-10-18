@@ -45,8 +45,8 @@ export default class PointPresenter {
       offers: this.#offers,
       destinations: this.#destinations,
       onEditClick: this.#handleCloseClick,
-      onFormSubmit: this.#handleFormSubmit,
-      onFormReset: this.#handleFormReset
+      onFormReset: this.#handleFormReset,
+      onFormSubmit: this.#handleFormSubmit
     });
 
     if (prevEventComponent === null || prevEventEditorComponent === null) {
@@ -85,7 +85,7 @@ export default class PointPresenter {
     if (this.#mode === Mode.EDITING) {
       this.#eventEditorComponent.updateElement({
         isDisabled: true,
-        isSaving: true
+        isDeleting: true
       });
     }
   }
@@ -152,19 +152,19 @@ export default class PointPresenter {
     );
   };
 
-  #handleFavoriteClick = () => {
-    this.#handleDataChange(
-      UserAction.UPDATE_POINT,
-      UpdateType.PATCH,
-      {...this.#point, isFavorite: !this.#point.isFavorite}
-    );
-  };
-
   #handleFormReset = (point) => {
     this.#handleDataChange(
       UserAction.DELETE_POINT,
       UpdateType.MINOR,
       point
+    );
+  };
+
+  #handleFavoriteClick = () => {
+    this.#handleDataChange(
+      UserAction.UPDATE_POINT,
+      UpdateType.PATCH,
+      {...this.#point, isFavorite: !this.#point.isFavorite}
     );
   };
 }

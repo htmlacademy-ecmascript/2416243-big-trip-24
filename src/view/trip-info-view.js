@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { getMaxDate, getMinDate, sortByDate } from '../utils/general.js';
+import { getMaxDate, getMinDate, sortByDate } from '../utils/date.js';
 import { LIMIT_DISPLAYED_DESTINATIONS } from '../constants.js';
 
 const getDestinationNames = (points, destinations) => {
@@ -36,10 +36,8 @@ const createTripInfoTemplate = (points, offers, destinations) => `
     <section class="trip-main__trip-info  trip-info">
       <div class="trip-info__main">
         <h1 class="trip-info__title">${getDestinationNames(points, destinations)}</h1>
-
         <p class="trip-info__dates">${getDates(points)}</p>
       </div>
-
       <p class="trip-info__cost">
         Total: &euro;&nbsp;<span class="trip-info__cost-value">${calculateBasePrice(points) + calculateOffersPrice(points, offers)}</span>
       </p>

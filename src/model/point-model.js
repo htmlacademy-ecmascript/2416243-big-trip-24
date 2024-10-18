@@ -6,8 +6,8 @@ export default class PointModel extends Observable {
   #pointsApiService = null;
 
   #points = [];
-  #destinations = [];
   #offers = [];
+  #destinations = [];
 
   #isLoading = true;
   #isLoadingFailed = false;
@@ -17,6 +17,26 @@ export default class PointModel extends Observable {
     this.#pointsApiService = pointsApiService;
   }
 
+  get points() {
+    return this.#points;
+  }
+
+  get offers() {
+    return this.#offers;
+  }
+
+  get destinations() {
+    return this.#destinations;
+  }
+
+  get loading() {
+    return this.#isLoading;
+  }
+
+  get error() {
+    return this.#isLoadingFailed;
+  }
+
   async init() {
     try {
       this.#points = await this.#pointsApiService.getPoints();
@@ -24,7 +44,7 @@ export default class PointModel extends Observable {
       this.#destinations = await this.#pointsApiService.getDestinations();
 
       this.#isLoading = false;
-    } catch {
+    } catch (err) {
       this.#points = [];
       this.#offers = [];
       this.#destinations = [];
@@ -34,26 +54,6 @@ export default class PointModel extends Observable {
     }
 
     this._notify(UpdateType.INIT);
-  }
-
-  get points() {
-    return this.#points;
-  }
-
-  get destinations() {
-    return this.#destinations;
-  }
-
-  get offers() {
-    return this.#offers;
-  }
-
-  get loading() {
-    return this.#isLoading;
-  }
-
-  get error() {
-    return this.#isLoadingFailed;
   }
 
   async updatePoint(updateType, point) {
