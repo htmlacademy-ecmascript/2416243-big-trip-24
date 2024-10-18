@@ -7,8 +7,9 @@ import NewPointPresenter from './new-point-presenter.js';
 
 import { remove, render, RenderPosition } from '../framework/render.js';
 import { MESSAGE, FilterMessage, FilterType, SortType, UpdateType, UserAction, TimeLimit } from '../constants.js';
-import { sortByDate, sortByDuration, sortByValue } from '../utils/general.js';
-import { filter } from '../utils/filters.js';
+import { sortByDate, sortByDuration } from '../utils/date.js';
+import { sortByValue } from '../utils/general.js';
+import { filter } from '../utils/filter.js';
 import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
 
 export default class MainPresenter {
@@ -56,7 +57,7 @@ export default class MainPresenter {
     const points = this.#pointModel.points;
     const filteredPoints = filter[this.#filterType](points);
 
-    switch (this.#currentSortType) {
+    switch (this.#currentSortType.name) {
       case SortType.DAY.name:
         return filteredPoints.sort(sortByDate('dateFrom'));
       case SortType.TIME.name:
@@ -139,7 +140,7 @@ export default class MainPresenter {
   };
 
   #createNewPoint = () => {
-    this.#currentSortType = SortType.DAY;
+    this.#currentSortType = this.#defaultSortType;
     this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
     this.#newPointPresenter.init();
 
@@ -229,6 +230,7 @@ export default class MainPresenter {
         this.#pointPresenters.get(point.id).init(point, this.offers, this.destinations);
         break;
       case UpdateType.MINOR:
+      case UpdateType.INIT:
         this.#clearContent();
         this.#renderContent();
         break;
@@ -237,15 +239,11 @@ export default class MainPresenter {
         this.#clearContent();
         this.#renderContent();
         break;
-      case UpdateType.INIT:
-        this.#clearContent();
-        this.#renderContent();
-        break;
     }
   };
 
   #handleSortTypeChange = (sortType) => {
-    this.#currentSortType = sortType;
+    this.#currentSortType = {name: sortType, disabled: false};
     this.#clearPoints();
     this.#renderPoints();
   };

@@ -1,5 +1,6 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
-import { convertDate, getCapitalized } from '../utils/general.js';
+import { getCapitalized } from '../utils/general.js';
+import { convertDate } from '../utils/date.js';
 import { DateFormat, EVENT_TYPES, generalFlatpickrConfig } from '../constants.js';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
@@ -24,7 +25,7 @@ const createEventTypeItemTemplate = (type, pointId) => `
 const createEventDestinationListTemplate = (destinations) => destinations.map((destination) => `<option value="${destination.name}"></option>`).join('');
 
 const createEventAvailableOffersTemplate = (defaultOffers, selectedOffers, pointId, isDisabled) => {
-  const convertOfferTitle = (title) => title.toLowerCase().split(' ')[-1];
+  const convertOfferTitle = (title) => title.toLowerCase().split(' ').join('-');
 
   if (defaultOffers.length === 0) {
     return '';
@@ -39,12 +40,12 @@ const createEventAvailableOffersTemplate = (defaultOffers, selectedOffers, point
       <div class="event__offer-selector">
         <input
           class="event__offer-checkbox  visually-hidden"
-          id="event-offer-${convertOfferTitle(defaultOffer.title)}-${pointId}"
+          id="${defaultOffer.id}"
           type="checkbox"
-          name="event-offer-${convertOfferTitle(defaultOffer.title)}"
+          name="event-offer-${convertOfferTitle(defaultOffer.title)}-${defaultOffer.id}"
           ${selectedOffers.map((selectedOffer) => selectedOffer.id).includes(defaultOffer.id) ? 'checked' : ''}
           ${isDisabled ? 'disabled' : ''}>
-        <label class="event__offer-label" for="event-offer-${convertOfferTitle(defaultOffer.title)}-${pointId}">
+        <label class="event__offer-label" for="${defaultOffer.id}">
           <span class="event__offer-title">${defaultOffer.title}</span>
           &plus;&euro;&nbsp;
           <span class="event__offer-price">${defaultOffer.price}</span>
@@ -105,9 +106,9 @@ const createRollupButtonTemplate = (id) => {
 };
 
 const createEventEditorTemplate = (point, offers, destinations)=> {
-  const eventDestination = destinations.find((item) => item.id === point.destination);
   const defaultOffers = offers.find((offer) => offer.type === point.type).offers;
   const selectedOffers = defaultOffers.filter((defaultOffer) => point.offers.includes(defaultOffer.id));
+  const eventDestination = destinations.find((item) => item.id === point.destination);
 
   const { basePrice, dateFrom, dateTo, type, isDisabled, isSaving, isDeleting } = point;
   const { description, name, pictures } = eventDestination || {};
@@ -268,7 +269,7 @@ export default class EventEditorView extends AbstractStatefulView {
   }
 
   reset(point) {
-    this.updateElement(EventEditorView.parseStateToPoint(point));
+    this.updateElement(EventEditorView.parsePointToState(point));
   }
 
   _restoreHandlers() {
@@ -295,45 +296,6 @@ export default class EventEditorView extends AbstractStatefulView {
       this.#dateToPicker = null;
     }
   }
-
-  #formSubmitHandler = (event) => {
-    event.preventDefault();
-    this.#handleFormSubmit(EventEditorView.parseStateToPoint(this._state));
-  };
-
-  #editClickHandler = () => this.#handleEditClick();
-
-  #typeChangeHandler = (event) => {
-    this.updateElement({
-      type: event.target.value
-    });
-  };
-
-  #destinationChangeHandler = (event) => {
-    const newDestination = this.#destinations.find((destination) => destination.name === event.target.value);
-
-    if (newDestination) {
-      this.updateElement({
-        destination: newDestination.id
-      });
-    }
-
-    event.target.value = '';
-  };
-
-  #availableOffersChangeHandler = () => {
-    const selectedOffers = this.element.querySelectorAll('.event__offer-checkbox:checked');
-
-    this._setState({
-      offers: Array.from(selectedOffers).map((item) => item.dataset.offerId)
-    });
-  };
-
-  #priceInputHandler = (event) => {
-    this._setState({
-      basePrice: parseInt(event.target.value, 10)
-    });
-  };
 
   #setDatePicker = () => {
     const startTime = this.element.querySelector(`#event-start-time-${this._state.id}`);
@@ -364,6 +326,44 @@ export default class EventEditorView extends AbstractStatefulView {
     this._setState({
       [name]: userDate
     });
+  };
+
+  #typeChangeHandler = (event) => {
+    this.updateElement({
+      type: event.target.value
+    });
+  };
+
+  #destinationChangeHandler = (event) => {
+    const newDestination = this.#destinations.find((destination) => destination.name === event.target.value);
+
+    if (newDestination) {
+      this.updateElement({
+        destination: newDestination.id
+      });
+    }
+
+    event.target.value = '';
+  };
+
+  #availableOffersChangeHandler = (evt) => {
+    evt.preventDefault();
+    const offersArr = this.element.querySelectorAll('.event__offer-checkbox:checked');
+    const offers = Array.from(offersArr,(offer) => offer.id);
+    this._setState({offers: offers});
+  };
+
+  #priceInputHandler = (event) => {
+    this._setState({
+      basePrice: parseInt(event.target.value, 10)
+    });
+  };
+
+  #editClickHandler = () => this.#handleEditClick();
+
+  #formSubmitHandler = (event) => {
+    event.preventDefault();
+    this.#handleFormSubmit(EventEditorView.parseStateToPoint(this._state));
   };
 
   #formResetHandler = (event) => {

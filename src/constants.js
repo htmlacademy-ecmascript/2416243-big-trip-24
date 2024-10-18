@@ -10,13 +10,13 @@ export const EVENT_TYPES = [
   'restaurant'
 ];
 
-export const DEFAULT_EVENT_TYPE = 'train';
+export const DEFAULT_EVENT_TYPE = 'flight';
 
 export const FilterType = {
   EVERYTHING: 'everything',
-  PAST: 'past',
+  FUTURE: 'future',
   PRESENT: 'present',
-  FUTURE: 'future'
+  PAST: 'past'
 };
 
 export const DateFormat = {
@@ -30,6 +30,8 @@ export const DateFormat = {
   DATE_PICKED: 'd/m/y H:i'
 };
 
+export const TIME_ZONE = 'Europe/Moscow';
+
 export const generalFlatpickrConfig = {
   disableMobile: 'true',
   enableTime: true,
@@ -39,7 +41,7 @@ export const generalFlatpickrConfig = {
 
 export const MESSAGE = {
   LOADING: 'Loading...',
-  FAILED_LOAD: 'Failed to load latest route information'
+  FAILED_LOAD: 'Loading... Failed to load latest route information'
 };
 
 export const FilterMessage = {
@@ -50,8 +52,8 @@ export const FilterMessage = {
 };
 
 export const Mode = {
-  DEFAULT: 'DEFAULT',
-  EDITING: 'EDITING',
+  DEFAULT: 'default',
+  EDITING: 'editing',
 };
 
 export const SortType = {
@@ -118,3 +120,4 @@ export const TimeLimit = {
   LOWER_LIMIT: 350,
   UPPER_LIMIT: 1000
 };
+

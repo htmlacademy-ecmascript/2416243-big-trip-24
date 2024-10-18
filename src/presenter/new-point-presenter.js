@@ -10,7 +10,7 @@ export default class NewPointPresenter {
   #handleDestroy = null;
 
   #pointModel = null;
-  #point = [];
+  #point = null;
 
   constructor({ listComponent, pointModel, onDataChange, onDestroy }) {
     this.#listComponent = listComponent;
@@ -29,7 +29,6 @@ export default class NewPointPresenter {
       point: this.#point,
       offers: this.#pointModel.offers,
       destinations: this.#pointModel.destinations,
-      onEditClick: this.#handleCloseClick,
       onFormSubmit: this.#handleFormSubmit,
       onFormReset: this.#handleFormReset
     });
@@ -70,10 +69,6 @@ export default class NewPointPresenter {
 
     this.#eventEditorComponent.shake(resetFormState);
   }
-
-  #handleCloseClick = () => {
-    this.destroy();
-  };
 
   #handleFormReset = () => {
     this.destroy();

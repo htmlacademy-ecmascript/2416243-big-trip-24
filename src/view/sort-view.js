@@ -20,7 +20,10 @@ const createTripSortItemTemplate = (name, isDisabled, currentSortType) => `
 
 const createSortTemplate = (currentSortType) => `
     <form class="trip-events__trip-sort  trip-sort" action="#" method="get">
-      ${Object.values(SortType).map((type) => createTripSortItemTemplate(type.name, type.disabled, currentSortType)).join('')}
+      ${Object
+    .values(SortType)
+    .map((type) => createTripSortItemTemplate(type.name, type.disabled, currentSortType))
+    .join('')}
     </form>`;
 
 export default class SortView extends AbstractView {

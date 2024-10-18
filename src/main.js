@@ -3,8 +3,8 @@ import PointModel from './model/point-model.js';
 import FilterModel from './model/filter-model.js';
 import FilterPresenter from './presenter/filter-presenter.js';
 import PointsApiService from './server/points-api-service.js';
+import TripInfoPresenter from './presenter/trip-info-presenter.js';
 import { END_POINT, AUTHORIZATION } from './constants.js';
-import TripInfoPresenter from './presenter/trip-info-presenter';
 
 const tripMainElement = document.querySelector('.trip-main');
 const tripEventsElement = document.querySelector('.trip-events');

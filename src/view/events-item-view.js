@@ -1,5 +1,6 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { calculateDuration, convertDate, convertDuration, getCapitalized } from '../utils/general.js';
+import { getCapitalized } from '../utils/general.js';
+import { convertDate, convertDuration } from '../utils/date.js';
 import { DateFormat } from '../constants.js';
 import he from 'he';
 
@@ -10,11 +11,11 @@ const createEventSelectedOffersTemplate = (selectedOffers) => {
 
   return `
     <ul class="event__selected-offers">
-      ${selectedOffers.map((selectedOffer) => (`
+      ${selectedOffers.map((offer) => (`
       <li class="event__offer">
-        <span class="event__offer-title">${selectedOffer.title}</span>
+        <span class="event__offer-title">${offer.title}</span>
         &plus;&euro;&nbsp;
-        <span class="event__offer-price">${selectedOffer.price}</span>
+        <span class="event__offer-price">${offer.price}</span>
       </li>`)).join('')}
     </ul>`;
 };
@@ -29,7 +30,7 @@ const createEventItemTemplate = (point, offers, destinations) => {
   const startDate = convertDate(dateFrom, DateFormat.MONTH_DAY);
   const startTime = convertDate(dateFrom, DateFormat.TIME);
   const endTime = convertDate(dateTo, DateFormat.TIME);
-  const duration = convertDuration(calculateDuration(dateFrom, dateTo));
+  const duration = convertDuration(dateFrom, dateTo);
   const favorite = isFavorite ? 'event__favorite-btn--active' : '';
 
   return `
@@ -79,6 +80,7 @@ export default class EventsItemView extends AbstractView {
     this.#point = point;
     this.#destinations = destinations;
     this.#offers = offers;
+
     this.#handleEditClick = onEditClick;
     this.#handleFavoriteClick = onFavoriteClick;
 
