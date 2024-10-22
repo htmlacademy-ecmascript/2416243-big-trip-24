@@ -41,7 +41,7 @@ export const generalFlatpickrConfig = {
 
 export const MESSAGE = {
   LOADING: 'Loading...',
-  FAILED_LOAD: 'Loading... Failed to load latest route information'
+  FAILED_LOAD: 'Failed to load latest route information'
 };
 
 export const FilterMessage = {
@@ -112,7 +112,7 @@ export const Method = {
 
 export const END_POINT = 'https://24.objects.htmlacademy.pro/big-trip';
 
-export const AUTHORIZATION = 'Basic FE49wwUYuvTvhn9vBjwv4';
+export const AUTHORIZATION = 'Basic FE49wwUYuvTvhn9vBjwv47';
 
 export const LIMIT_DISPLAYED_DESTINATIONS = 3;
 
